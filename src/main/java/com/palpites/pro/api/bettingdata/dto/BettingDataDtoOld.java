@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BettingDataDto {
+public class BettingDataDtoOld {
 
     private String league;
     private String winner;

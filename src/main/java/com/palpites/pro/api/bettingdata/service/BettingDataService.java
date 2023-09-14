@@ -1,8 +1,5 @@
 package com.palpites.pro.api.bettingdata.service;
 
-import com.palpites.pro.api.bettingdata.client.ApiFootBallClient;
-import com.palpites.pro.api.bettingdata.dto.fixtures.FixtureResponseDto;
-import com.palpites.pro.api.bettingdata.dto.fixtures.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
