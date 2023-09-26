@@ -1,20 +1,33 @@
-package com.palpites.pro.api.bettingdata.dto.bets;
+package com.palpites.pro.api.bettingdata.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StandingsDto {
+@Table(name = "TB_STANDING")
+public class StandingEntity {
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private String id;
+
+    private Integer leagueId;
     private String leagueName;
     private String leagueLogo;
-    private Integer leagueId;
     private Integer teamId;
     private Integer ranking;
     private String nameTeam;
@@ -33,4 +46,7 @@ public class StandingsDto {
     private Integer drawAway;
     private Integer loseAway;
     private Integer round;
+
+    private String createdAt;
+    private String updatedAt;
 }

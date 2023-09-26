@@ -1,4 +1,4 @@
-package com.palpites.pro.api.bettingdata.service;
+package com.palpites.pro.api.bettingdata.utils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

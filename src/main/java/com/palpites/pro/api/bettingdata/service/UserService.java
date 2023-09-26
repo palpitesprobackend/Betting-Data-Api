@@ -9,6 +9,7 @@ import com.palpites.pro.api.bettingdata.dto.users.UserResponseDto;
 import com.palpites.pro.api.bettingdata.entity.UserEntity;
 import com.palpites.pro.api.bettingdata.exceptions.ExceptionMessages;
 import com.palpites.pro.api.bettingdata.repository.UserAccountRepository;
+import com.palpites.pro.api.bettingdata.utils.ServicesUtils;
 import com.palpites.pro.api.bettingdata.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 
