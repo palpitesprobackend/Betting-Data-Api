@@ -11,10 +11,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StandingsDto {
-    private String leagueName;
-    private String leagueLogo;
-    private Integer leagueId;
+public class BaseStandingsDto {
     private Integer teamId;
     private Integer ranking;
     private String nameTeam;
@@ -24,6 +21,7 @@ public class StandingsDto {
     private Integer winTot;
     private Integer drawTot;
     private Integer loseTot;
+    private Integer sg;
     private Integer playedHome;
     private Integer winHome;
     private Integer drawHome;
@@ -32,5 +30,4 @@ public class StandingsDto {
     private Integer winAway;
     private Integer drawAway;
     private Integer loseAway;
-    private Integer round;
 }

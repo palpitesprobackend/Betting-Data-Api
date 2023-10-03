@@ -36,4 +36,12 @@ public class BettingDataController {
         return new ResponseEntity<>(service.findStanding(league), HttpStatus.OK);
     }
 
+    @ResponseBody
+    @GetMapping(value = "/h2h", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Object> headToHead(@RequestParam(name = "league") String league,
+                                             @RequestParam(name = "teamIdWinner") Integer teamIdWinner,
+                                             @RequestParam(name = "league") Integer teamIdLoser) {
+        return new ResponseEntity<>(service.findH2H(league, teamIdWinner, teamIdLoser), HttpStatus.OK);
+    }
+
 }

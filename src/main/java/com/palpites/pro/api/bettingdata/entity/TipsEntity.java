@@ -26,6 +26,7 @@ public class TipsEntity {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
+    private Integer leagueId;
     private String leagueName;
     private String advice;
     private String winner;

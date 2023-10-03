@@ -1,7 +1,7 @@
 package com.palpites.pro.api.bettingdata.service;
 
-import com.palpites.pro.api.bettingdata.dto.bets.BettingDataDto;
-import com.palpites.pro.api.bettingdata.dto.bets.StandingsDto;
+import com.palpites.pro.api.bettingdata.dto.bets.BettingDataRespDto;
+import com.palpites.pro.api.bettingdata.dto.bets.StandingResponseDto;
 import com.palpites.pro.api.bettingdata.entity.StandingEntity;
 import com.palpites.pro.api.bettingdata.entity.TipsEntity;
 import com.palpites.pro.api.bettingdata.exceptions.ExceptionMessages;
@@ -24,94 +24,92 @@ public class FindDataService {
     private final TipsRepository tipsRepository;
     private final StandingRepository standingRepository;
 
-    public List<BettingDataDto> findBettingTips(String nameLeague, String date) {
+    public List<BettingDataRespDto> findBettingTips(String nameLeague, String date) {
         //TODO: VERIFICAR SE NÃO GERA NULLPOINTER sem o new ArrayList
 //        List<BettingDataDto> bettingDataDtoList = new ArrayList<>();
-        List<BettingDataDto> bettingDataDtoList;
+        List<BettingDataRespDto> bettingDataRespDtoList;
         List<TipsEntity> entityList = tipsRepository.findByLeagueNameAndDate(nameLeague, date);
 
         if (Objects.nonNull(entityList) && !entityList.isEmpty()) {
-            bettingDataDtoList = entityList.stream()
+            bettingDataRespDtoList = entityList.stream()
                     .map(this::parseEntityToDto)
                     .collect(Collectors.toList());
         } else
           throw new ExceptionMessages(
               HttpStatus.BAD_REQUEST, "Nenhum palpite foi encontrado para data e liga informados");
 
-        return bettingDataDtoList;
+        return bettingDataRespDtoList;
     }
 
-    public List<StandingsDto> findStanding(String nameLeague) {
-        List<StandingsDto> standingsDtoList;
+    public List<StandingResponseDto> findStanding(String nameLeague) {
+        List<StandingResponseDto> standingResponseDtoList;
         List<StandingEntity> entityList = standingRepository.findByLeagueName(nameLeague);
 
         if (Objects.nonNull(entityList) && !entityList.isEmpty()) {
             entityList.sort(Comparator.comparingInt(StandingEntity::getRanking));
-            standingsDtoList = entityList.stream()
+            standingResponseDtoList = entityList.stream()
                     .map(this::parseEntityToStandingsDto)
                     .collect(Collectors.toList());
         } else
             throw new ExceptionMessages(
                     HttpStatus.BAD_REQUEST, "Nenhuma classificacao foi encontrada para a liga informada");
 
-        return standingsDtoList;
+        return standingResponseDtoList;
     }
 
-    public List<StandingsDto> findH2H(String nameLeague, Integer teamIdWinner, Integer teamIdLoser) {
-        List<StandingsDto> standingsDtoList = new ArrayList<>();
+    public List<StandingResponseDto> findH2H(String nameLeague, Integer teamIdWinner, Integer teamIdLoser) {
+        List<StandingResponseDto> standingResponseDtos = new ArrayList<>();
         Optional<StandingEntity> entityWinner = standingRepository.findByLeagueNameAndTeamId(nameLeague, teamIdWinner);
         Optional<StandingEntity> entityLoser = standingRepository.findByLeagueNameAndTeamId(nameLeague, teamIdLoser);
 
         if (entityWinner.isPresent() && entityLoser.isPresent()) {
             var winnerClassification = parseEntityToStandingsDto(entityWinner.get());
-            standingsDtoList.add(winnerClassification);
+            standingResponseDtos.add(winnerClassification);
             var loserClassification = parseEntityToStandingsDto(entityLoser.get());
-            standingsDtoList.add(loserClassification);
+            standingResponseDtos.add(loserClassification);
         } else
             throw new ExceptionMessages(
                     HttpStatus.BAD_REQUEST, "Informacoes de classificacao nao encontradas para os dados informados");
 
-        return standingsDtoList;
+        return standingResponseDtos;
     }
 
-    private BettingDataDto parseEntityToDto(TipsEntity entity) {
-    return BettingDataDto.builder()
-        .nameLeague(entity.getLeagueName())
-        .advice(entity.getAdvice())
-        .winner(entity.getWinner())
-        .flagWinner(entity.getFlagWinner())
-        .loser(entity.getLoser())
-        .flagLoser(entity.getFlagLoser())
-        .date(entity.getDate())
-        .bookmaker(entity.getBookmaker())
-        // TODO:OBSERVAR este ponto
-        .betPayment(entity.getBetPayment())
-        .build();
+    private BettingDataRespDto parseEntityToDto(TipsEntity entity) {
+        BettingDataRespDto dto = new BettingDataRespDto();
+        dto.setNameLeague(entity.getLeagueName());
+        dto.setAdvice(entity.getAdvice());
+        dto.setWinner(entity.getWinner());
+        dto.setFlagWinner(entity.getFlagWinner());
+        dto.setLoser(entity.getLoser());
+        dto.setFlagLoser(entity.getFlagLoser());
+        dto.setDate(entity.getDate());
+        dto.setBookmaker(entity.getBookmaker());
+        return dto;
     }
 
-    private StandingsDto parseEntityToStandingsDto(StandingEntity entity) {
-    return StandingsDto.builder()
-        .leagueId(entity.getLeagueId())
-        .leagueName(entity.getLeagueName())
-        .leagueLogo(entity.getLeagueLogo())
-        .teamId(entity.getTeamId())
-        .ranking(entity.getRanking())
-        .nameTeam(entity.getNameTeam())
-        .flag(entity.getFlag())
-        .points(entity.getPoints())
-        .playedTot(entity.getPlayedTot())
-        .winTot(entity.getWinTot())
-        .drawTot(entity.getDrawTot())
-        .loseTot(entity.getLoseTot())
-        .playedHome(entity.getPlayedHome())
-        .winHome(entity.getWinTot())
-        .drawHome(entity.getDrawHome())
-        .loseHome(entity.getLoseHome())
-        .playedAway(entity.getPlayedAway())
-        .winAway(entity.getWinAway())
-        .drawAway(entity.getDrawAway())
-        .loseAway(entity.getLoseAway())
-        .round(entity.getRound())
-        .build();
+    private StandingResponseDto parseEntityToStandingsDto(StandingEntity entity) {
+        StandingResponseDto standingResponseDto = new StandingResponseDto();
+        standingResponseDto.setLeagueId(entity.getLeagueId());
+        standingResponseDto.setLeagueName(entity.getLeagueName());
+        standingResponseDto.setLeagueLogo(entity.getLeagueLogo());
+        standingResponseDto.setTeamId(entity.getTeamId());
+        standingResponseDto.setRanking(entity.getRanking());
+        standingResponseDto.setNameTeam(entity.getNameTeam());
+        standingResponseDto.setFlag(entity.getFlag());
+        standingResponseDto.setPoints(entity.getPoints());
+        standingResponseDto.setPlayedTot(entity.getPlayedTot());
+        standingResponseDto.setWinTot(entity.getWinTot());
+        standingResponseDto.setDrawTot(entity.getDrawTot());
+        standingResponseDto.setLoseTot(entity.getLoseTot());
+        standingResponseDto.setPlayedHome(entity.getPlayedHome());
+        standingResponseDto.setWinHome(entity.getWinTot());
+        standingResponseDto.setDrawHome(entity.getDrawHome());
+        standingResponseDto.setLoseHome(entity.getLoseHome());
+        standingResponseDto.setPlayedAway(entity.getPlayedAway());
+        standingResponseDto.setWinAway(entity.getWinAway());
+        standingResponseDto.setDrawAway(entity.getDrawAway());
+        standingResponseDto.setLoseAway(entity.getLoseAway());
+
+        return standingResponseDto;
     }
 }
